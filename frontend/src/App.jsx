@@ -30,7 +30,6 @@ export default function App() {
       })
       .catch((err) => {
         console.error('Error fetching dates:', err);
-        // Fallback default
         setAvailableDates(['2026-01-15']);
       });
   }, []);
@@ -57,7 +56,7 @@ export default function App() {
   }, [selectedDate, cutoffHour, loadAnalysis]);
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: 'var(--bg-primary)' }}>
       <Header
         dataSource={analysisData?.data_source}
         onOpenMonthlySummary={() => setIsMonthlyModalOpen(true)}
@@ -96,35 +95,33 @@ export default function App() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '4rem 1rem',
+            padding: '5rem 1rem',
             color: 'var(--text-muted)',
-            gap: '0.75rem'
+            gap: '0.85rem'
           }}>
-            <RefreshCw size={24} className="spin" style={{ animation: 'spin 1s linear infinite' }} />
-            <span style={{ fontSize: '1rem', fontWeight: 500 }}>
-              Retrieving settlement period generation telemetry &amp; evaluating day-ahead forecasts...
+            <RefreshCw size={24} className="spin" color="var(--primary)" />
+            <span style={{ fontSize: '0.95rem', fontWeight: 500 }}>
+              Retrieving generation telemetry &amp; evaluating day-ahead forecasts...
             </span>
-            <style>{`
-              @keyframes spin { 100% { transform: rotate(360deg); } }
-            `}</style>
           </div>
         )}
 
         {/* Error Banner */}
         {errorMessage && !isLoading && (
           <div style={{
-            background: 'rgba(244, 63, 94, 0.1)',
-            border: '1px solid rgba(244, 63, 94, 0.3)',
-            borderRadius: '10px',
+            background: '#fff1f2',
+            border: '1px solid #fecdd3',
+            borderRadius: '12px',
             padding: '1.5rem',
             marginBottom: '1.5rem',
-            textAlign: 'center'
+            textAlign: 'center',
+            boxShadow: 'var(--shadow-sm)'
           }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#fda4af', fontWeight: 600 }}>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', color: '#be123c', fontWeight: 600 }}>
               <AlertCircle size={20} />
               <span>Failed to Load Forecast Data</span>
             </div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem', marginTop: '0.5rem', marginBottom: '1rem' }}>
+            <p style={{ color: '#9f1239', fontSize: '0.875rem', marginTop: '0.5rem', marginBottom: '1rem' }}>
               {errorMessage}
             </p>
             <button
@@ -157,12 +154,12 @@ export default function App() {
         borderTop: '1px solid var(--border-color)',
         padding: '1.5rem 0',
         textAlign: 'center',
-        color: 'var(--text-subtle)',
-        fontSize: '0.8rem',
-        background: 'var(--bg-surface)'
+        color: 'var(--text-muted)',
+        fontSize: '0.825rem',
+        background: '#ffffff'
       }}>
         <div className="container">
-          UK Electricity Wind-Generation Forecasting Analytics Platform • Powered by Elexon BMRS FUELHH &amp; WINDFOR Datasets
+          UK Electricity Wind-Generation Forecasting Analytics Platform • Elexon BMRS FUELHH &amp; WINDFOR Datasets
         </div>
       </footer>
     </div>

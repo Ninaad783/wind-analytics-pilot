@@ -25,97 +25,110 @@ export default function MetricCards({ metrics }) {
     <div style={{ marginBottom: '1.25rem' }}>
       <div className="grid-cols-4">
         {/* MAE Card */}
-        <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
+        <div className="card card-hoverable">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+            <span style={{ fontSize: '0.785rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Mean Absolute Error (MAE)
             </span>
-            <Activity size={16} color="var(--primary)" />
+            <div style={{ background: '#eff6ff', padding: '0.35rem', borderRadius: '7px' }}>
+              <Activity size={16} color="var(--primary)" />
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem' }}>
-            <span className="mono" style={{ fontSize: '1.75rem', fontWeight: 700, color: '#fff' }}>
+            <span className="mono" style={{ fontSize: '1.9rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
               {mae_mw !== null ? mae_mw.toLocaleString(undefined, { minimumFractionDigits: 1 }) : '—'}
             </span>
-            <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>MW</span>
+            <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)' }}>MW</span>
           </div>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginTop: '0.35rem' }}>
-            Average absolute deviation per half-hour period: <code className="mono">mean(|fc - act|)</code>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginTop: '0.4rem' }}>
+            Average absolute error: <code className="mono" style={{ background: '#f1f5f9', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>mean(|fc - act|)</code>
           </p>
         </div>
 
         {/* RMSE Card */}
-        <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
-              Root Mean Squared Error (RMSE)
+        <div className="card card-hoverable">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+            <span style={{ fontSize: '0.785rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Root Mean Squared Error
             </span>
-            <Gauge size={16} color="#a855f7" />
+            <div style={{ background: '#f5f3ff', padding: '0.35rem', borderRadius: '7px' }}>
+              <Gauge size={16} color="#7c3aed" />
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem' }}>
-            <span className="mono" style={{ fontSize: '1.75rem', fontWeight: 700, color: '#fff' }}>
+            <span className="mono" style={{ fontSize: '1.9rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
               {rmse_mw !== null ? rmse_mw.toLocaleString(undefined, { minimumFractionDigits: 1 }) : '—'}
             </span>
-            <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>MW</span>
+            <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)' }}>MW</span>
           </div>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginTop: '0.35rem' }}>
-            Penalizes large outlier forecast busts: <code className="mono">sqrt(mean((fc - act)²))</code>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginTop: '0.4rem' }}>
+            Penalizes large outlier misses: <code className="mono" style={{ background: '#f1f5f9', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>sqrt(mean(e²))</code>
           </p>
         </div>
 
         {/* Forecast Bias Card */}
-        <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
+        <div className="card card-hoverable">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+            <span style={{ fontSize: '0.785rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Forecast Bias (Mean Error)
             </span>
-            {isOverForecasting ? (
-              <TrendingUp size={16} color="var(--accent-error)" />
-            ) : isUnderForecasting ? (
-              <TrendingDown size={16} color="var(--accent-forecast)" />
-            ) : (
-              <CheckCircle size={16} color="var(--accent-actual)" />
-            )}
+            <div style={{
+              background: isOverForecasting ? '#fff1f2' : (isUnderForecasting ? '#eff6ff' : '#ecfdf5'),
+              padding: '0.35rem',
+              borderRadius: '7px'
+            }}>
+              {isOverForecasting ? (
+                <TrendingUp size={16} color="var(--accent-error)" />
+              ) : isUnderForecasting ? (
+                <TrendingDown size={16} color="var(--primary)" />
+              ) : (
+                <CheckCircle size={16} color="var(--accent-actual)" />
+              )}
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.5rem' }}>
             <span className="mono" style={{
-              fontSize: '1.75rem',
+              fontSize: '1.9rem',
               fontWeight: 700,
-              color: isOverForecasting ? 'var(--accent-error)' : (isUnderForecasting ? '#93c5fd' : 'var(--accent-actual)')
+              letterSpacing: '-0.02em',
+              color: isOverForecasting ? 'var(--accent-error)' : (isUnderForecasting ? 'var(--primary)' : 'var(--accent-actual)')
             }}>
               {bias_mw !== null ? (bias_mw > 0 ? `+${bias_mw.toFixed(1)}` : bias_mw.toFixed(1)) : '—'}
             </span>
-            <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>MW</span>
+            <span style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-muted)' }}>MW</span>
             <span className={`badge ${isOverForecasting ? 'badge-red' : (isUnderForecasting ? 'badge-blue' : 'badge-green')}`} style={{ marginLeft: 'auto' }}>
               {isOverForecasting ? 'Over-fc' : (isUnderForecasting ? 'Under-fc' : 'Balanced')}
             </span>
           </div>
-          <p style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginTop: '0.35rem' }}>
-            Sign: <code className="mono">mean(forecast - actual)</code>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginTop: '0.4rem' }}>
+            Sign: <code className="mono" style={{ background: '#f1f5f9', padding: '0.1rem 0.3rem', borderRadius: '4px' }}>mean(forecast - actual)</code>
           </p>
         </div>
 
         {/* Energy & Quality Card */}
-        <div className="card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase' }}>
-              Data Quality & Volume
+        <div className="card card-hoverable">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.65rem' }}>
+            <span style={{ fontSize: '0.785rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              Data Quality &amp; Volume
             </span>
-            <Zap size={16} color="var(--accent-actual)" />
+            <div style={{ background: '#ecfdf5', padding: '0.35rem', borderRadius: '7px' }}>
+              <Zap size={16} color="var(--accent-actual)" />
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
             <div>
-              <span className="mono" style={{ fontSize: '1.75rem', fontWeight: 700, color: '#fff' }}>
+              <span className="mono" style={{ fontSize: '1.9rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
                 {data_quality_score !== null ? `${data_quality_score}%` : '—'}
               </span>
-              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
                 {valid_periods}/{total_periods} periods matched
               </p>
             </div>
             <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '0.75rem', color: 'var(--accent-actual)' }}>
+              <div style={{ fontSize: '0.785rem', fontWeight: 600, color: 'var(--accent-actual)' }}>
                 Act: {total_actual_mwh ? total_actual_mwh.toLocaleString() : '0'} MWh
               </div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--accent-forecast)' }}>
+              <div style={{ fontSize: '0.785rem', fontWeight: 600, color: 'var(--accent-forecast)' }}>
                 Fc: {total_forecast_mwh ? total_forecast_mwh.toLocaleString() : '0'} MWh
               </div>
             </div>
@@ -132,19 +145,20 @@ export default function MetricCards({ metrics }) {
       {/* Commercial Interpretation Banner */}
       {bias_interpretation && (
         <div style={{
-          marginTop: '0.75rem',
-          background: 'rgba(17, 24, 39, 0.6)',
+          marginTop: '0.85rem',
+          background: '#ffffff',
           border: '1px solid var(--border-color)',
-          borderRadius: '8px',
-          padding: '0.625rem 1rem',
-          fontSize: '0.8rem',
+          borderRadius: '10px',
+          padding: '0.75rem 1.15rem',
+          fontSize: '0.825rem',
           color: 'var(--text-muted)',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.5rem'
+          gap: '0.65rem',
+          boxShadow: 'var(--shadow-sm)'
         }}>
           <span style={{ fontWeight: 600, color: 'var(--text-main)' }}>Commercial Impact:</span>
-          <span>{bias_interpretation}</span>
+          <span style={{ lineHeight: '1.5' }}>{bias_interpretation}</span>
         </div>
       )}
     </div>

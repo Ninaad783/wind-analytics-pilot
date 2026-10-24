@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react';
-import { Eye, Layers, Maximize2 } from 'lucide-react';
 
 export default function ForecastChart({ periods, targetDate }) {
   const [hoveredIndex, setHoveredIndex] = useState(null);
@@ -8,7 +7,7 @@ export default function ForecastChart({ periods, targetDate }) {
   // SVG Chart Dimensions
   const width = 1100;
   const height = 400;
-  const padding = { top: 30, right: 30, bottom: 50, left: 70 };
+  const padding = { top: 30, right: 30, bottom: 50, left: 75 };
 
   const chartWidth = width - padding.left - padding.right;
   const chartHeight = height - padding.top - padding.bottom;
@@ -33,7 +32,7 @@ export default function ForecastChart({ periods, targetDate }) {
     let fcD = '';
     const validPairs = [];
 
-    periods.forEach((p, idx) => {
+    periods.forEach((p) => {
       const x = getX(p.settlement_period);
 
       if (p.actual_mw !== null) {
@@ -51,7 +50,6 @@ export default function ForecastChart({ periods, targetDate }) {
       }
     });
 
-    // Build shaded error polygon between actual and forecast
     let areaD = '';
     if (validPairs.length > 0) {
       areaD = `M ${validPairs[0].x} ${validPairs[0].yAct}`;
@@ -67,10 +65,7 @@ export default function ForecastChart({ periods, targetDate }) {
     return { actualPath: actD, forecastPath: fcD, areaPath: areaD };
   }, [periods, maxMw]);
 
-  // Y-axis grid ticks (e.g. 0, 5000, 10000, 15000, 20000)
   const yTicks = [0, maxMw * 0.25, maxMw * 0.5, maxMw * 0.75, maxMw];
-
-  // X-axis settlement period ticks (SP 1, 6, 12, 18, 24, 30, 36, 42, 48)
   const xTicks = [1, 6, 12, 18, 24, 30, 36, 42, 48];
 
   const activePeriod = hoveredIndex !== null ? periods[hoveredIndex] : null;
@@ -86,7 +81,7 @@ export default function ForecastChart({ periods, targetDate }) {
         gap: '0.75rem'
       }}>
         <div>
-          <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#fff' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
             Day-Ahead Wind Generation vs. Actual Output
           </h2>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
@@ -96,17 +91,25 @@ export default function ForecastChart({ periods, targetDate }) {
 
         {/* Legend & Controls */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', flexWrap: 'wrap' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.825rem' }}>
             <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--accent-actual)', display: 'inline-block' }} />
-            <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>Actual (FUELHH)</span>
+            <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>Actual (FUELHH)</span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', fontSize: '0.825rem' }}>
             <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: 'var(--accent-forecast)', display: 'inline-block' }} />
-            <span style={{ color: 'var(--text-main)', fontWeight: 500 }}>Forecast (WINDFOR)</span>
+            <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>Forecast (WINDFOR)</span>
           </div>
 
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem', cursor: 'pointer', color: 'var(--text-muted)' }}>
+          <label style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.4rem',
+            fontSize: '0.825rem',
+            cursor: 'pointer',
+            color: 'var(--text-muted)',
+            userSelect: 'none'
+          }}>
             <input
               type="checkbox"
               checked={showErrorArea}
@@ -135,16 +138,17 @@ export default function ForecastChart({ periods, targetDate }) {
                   y1={y}
                   x2={width - padding.right}
                   y2={y}
-                  stroke="var(--border-subtle)"
+                  stroke="#e2e8f0"
                   strokeDasharray="4 4"
                 />
                 <text
-                  x={padding.left - 10}
+                  x={padding.left - 12}
                   y={y + 4}
                   textAnchor="end"
                   fill="var(--text-subtle)"
                   fontSize="11"
                   className="mono"
+                  fontWeight="500"
                 >
                   {tick.toLocaleString()} MW
                 </text>
@@ -158,7 +162,8 @@ export default function ForecastChart({ periods, targetDate }) {
             y1={padding.top + chartHeight}
             x2={width - padding.right}
             y2={padding.top + chartHeight}
-            stroke="var(--border-color)"
+            stroke="#cbd5e1"
+            strokeWidth="1.5"
           />
 
           {xTicks.map((sp) => {
@@ -172,7 +177,7 @@ export default function ForecastChart({ periods, targetDate }) {
                   y1={padding.top + chartHeight}
                   x2={x}
                   y2={padding.top + chartHeight + 6}
-                  stroke="var(--border-color)"
+                  stroke="#cbd5e1"
                 />
                 <text
                   x={x}
@@ -181,6 +186,7 @@ export default function ForecastChart({ periods, targetDate }) {
                   fill="var(--text-muted)"
                   fontSize="11"
                   className="mono"
+                  fontWeight="600"
                 >
                   SP {sp}
                 </text>
@@ -189,7 +195,7 @@ export default function ForecastChart({ periods, targetDate }) {
                   y={padding.top + chartHeight + 34}
                   textAnchor="middle"
                   fill="var(--text-subtle)"
-                  fontSize="9"
+                  fontSize="9.5"
                   className="mono"
                 >
                   {`${hour.toString().padStart(2, '0')}:${min}`}
@@ -202,8 +208,9 @@ export default function ForecastChart({ periods, targetDate }) {
           {showErrorArea && areaPath && (
             <path
               d={areaPath}
-              fill="rgba(244, 63, 94, 0.12)"
+              fill="rgba(225, 29, 72, 0.08)"
               stroke="none"
+              style={{ transition: 'opacity 0.25s ease' }}
             />
           )}
 
@@ -213,7 +220,7 @@ export default function ForecastChart({ periods, targetDate }) {
               d={forecastPath}
               fill="none"
               stroke="var(--accent-forecast)"
-              strokeWidth="2.5"
+              strokeWidth="2.8"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -225,7 +232,7 @@ export default function ForecastChart({ periods, targetDate }) {
               d={actualPath}
               fill="none"
               stroke="var(--accent-actual)"
-              strokeWidth="2.5"
+              strokeWidth="2.8"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -239,7 +246,6 @@ export default function ForecastChart({ periods, targetDate }) {
 
             return (
               <g key={p.settlement_period}>
-                {/* Invisible hover capture rect */}
                 <rect
                   x={x - colWidth / 2}
                   y={padding.top}
@@ -250,7 +256,6 @@ export default function ForecastChart({ periods, targetDate }) {
                   onMouseEnter={() => setHoveredIndex(idx)}
                 />
 
-                {/* Vertical hover indicator bar */}
                 {isHovered && (
                   <>
                     <line
@@ -260,30 +265,28 @@ export default function ForecastChart({ periods, targetDate }) {
                       y2={padding.top + chartHeight}
                       stroke="var(--primary)"
                       strokeWidth="1.5"
-                      strokeDasharray="2 2"
+                      strokeDasharray="3 3"
                     />
 
-                    {/* Point on actual */}
                     {p.actual_mw !== null && (
                       <circle
                         cx={x}
                         cy={getY(p.actual_mw)}
-                        r="5"
+                        r="5.5"
                         fill="var(--accent-actual)"
-                        stroke="#fff"
-                        strokeWidth="2"
+                        stroke="#ffffff"
+                        strokeWidth="2.5"
                       />
                     )}
 
-                    {/* Point on forecast */}
                     {p.forecast_mw !== null && (
                       <circle
                         cx={x}
                         cy={getY(p.forecast_mw)}
-                        r="5"
+                        r="5.5"
                         fill="var(--accent-forecast)"
-                        stroke="#fff"
-                        strokeWidth="2"
+                        stroke="#ffffff"
+                        strokeWidth="2.5"
                       />
                     )}
                   </>
@@ -297,51 +300,51 @@ export default function ForecastChart({ periods, targetDate }) {
       {/* Floating Tooltip Detail Box */}
       {activePeriod && (
         <div style={{
-          marginTop: '0.75rem',
-          padding: '0.75rem 1rem',
-          background: 'rgba(17, 24, 39, 0.95)',
-          border: '1px solid var(--primary)',
-          borderRadius: '8px',
+          marginTop: '0.85rem',
+          padding: '0.85rem 1.15rem',
+          background: '#ffffff',
+          border: '1px solid var(--border-strong)',
+          borderRadius: '10px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
           gap: '1rem',
-          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)'
+          boxShadow: 'var(--shadow-lg)'
         }}>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
               <span className="badge badge-blue">SP {activePeriod.settlement_period}</span>
-              <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>
+              <span style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-main)' }}>
                 Delivery Half-Hour: {new Date(activePeriod.start_time_utc).toISOString().substring(11, 16)} – {new Date(activePeriod.end_time_utc).toISOString().substring(11, 16)} UTC
               </span>
             </div>
-            <p style={{ fontSize: '0.75rem', color: 'var(--text-subtle)', marginTop: '0.2rem' }}>
+            <p style={{ fontSize: '0.775rem', color: 'var(--text-subtle)', marginTop: '0.25rem' }}>
               Forecast Published: {activePeriod.forecast_publish_time_utc ? new Date(activePeriod.forecast_publish_time_utc).toUTCString().replace('GMT', 'UTC') : 'Missing'}
             </p>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.75rem', flexWrap: 'wrap' }}>
             <div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--accent-actual)', textTransform: 'uppercase' }}>Actual (FUELHH)</div>
-              <div className="mono" style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>
+              <div style={{ fontSize: '0.725rem', color: 'var(--accent-actual)', textTransform: 'uppercase', fontWeight: 600 }}>Actual (FUELHH)</div>
+              <div className="mono" style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-main)' }}>
                 {activePeriod.actual_mw !== null ? `${activePeriod.actual_mw.toLocaleString()} MW` : 'MISSING'}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--accent-forecast)', textTransform: 'uppercase' }}>Day-Ahead Forecast</div>
-              <div className="mono" style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>
+              <div style={{ fontSize: '0.725rem', color: 'var(--accent-forecast)', textTransform: 'uppercase', fontWeight: 600 }}>Day-Ahead Forecast</div>
+              <div className="mono" style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-main)' }}>
                 {activePeriod.forecast_mw !== null ? `${activePeriod.forecast_mw.toLocaleString()} MW` : 'MISSING'}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--accent-error)', textTransform: 'uppercase' }}>Error (fc - act)</div>
+              <div style={{ fontSize: '0.725rem', color: 'var(--accent-error)', textTransform: 'uppercase', fontWeight: 600 }}>Error (fc - act)</div>
               <div className="mono" style={{
-                fontSize: '1.1rem',
+                fontSize: '1.15rem',
                 fontWeight: 700,
-                color: activePeriod.error_mw !== null ? (activePeriod.error_mw > 0 ? 'var(--accent-error)' : '#93c5fd') : 'var(--text-subtle)'
+                color: activePeriod.error_mw !== null ? (activePeriod.error_mw > 0 ? 'var(--accent-error)' : 'var(--primary)') : 'var(--text-subtle)'
               }}>
                 {activePeriod.error_mw !== null ? `${activePeriod.error_mw > 0 ? '+' : ''}${activePeriod.error_mw.toFixed(1)} MW` : '—'}
               </div>

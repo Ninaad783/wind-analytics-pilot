@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Activity, Zap, CheckCircle, ArrowRight } from 'lucide-react';
+import { X, ArrowRight } from 'lucide-react';
 import { fetchMonthlySummary } from '../services/api';
 
 export default function MonthlySummaryModal({ isOpen, onClose, onSelectDate }) {
@@ -33,52 +33,56 @@ export default function MonthlySummaryModal({ isOpen, onClose, onSelectDate }) {
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'rgba(0, 0, 0, 0.75)',
-      backdropFilter: 'blur(6px)',
+      background: 'rgba(15, 23, 42, 0.45)',
+      backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       zIndex: 100,
-      padding: '1.5rem'
+      padding: '1.5rem',
+      animation: 'fadeIn 0.2s ease-in-out'
     }}>
       <div style={{
-        background: 'var(--bg-surface)',
+        background: '#ffffff',
         border: '1px solid var(--border-color)',
-        borderRadius: '12px',
+        borderRadius: '16px',
         width: '100%',
-        maxWidth: '900px',
+        maxWidth: '920px',
         maxHeight: '90vh',
         display: 'flex',
         flexDirection: 'column',
-        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.5)'
+        boxShadow: 'var(--shadow-xl)'
       }}>
         {/* Header */}
         <div style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '1.25rem 1.5rem',
-          borderBottom: '1px solid var(--border-color)'
+          padding: '1.25rem 1.75rem',
+          borderBottom: '1px solid var(--border-color)',
+          background: '#f8fafc',
+          borderTopLeftRadius: '16px',
+          borderTopRightRadius: '16px'
         }}>
           <div>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: '#fff' }}>
+            <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
               January 2026 Wind Generation Performance Summary
             </h2>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Executive Aggregate: 31 Delivery Days • 1,488 Half-Hour Settlement Periods
+              Executive Benchmark: 31 Delivery Days • 1,488 Half-Hour Settlement Periods
             </p>
           </div>
           <button
             onClick={onClose}
             className="btn btn-secondary"
-            style={{ padding: '0.4rem', borderRadius: '50%' }}
+            style={{ padding: '0.45rem', borderRadius: '50%', minWidth: '32px' }}
           >
             <X size={18} />
           </button>
         </div>
 
         {/* Content Body */}
-        <div style={{ padding: '1.5rem', overflowY: 'auto' }}>
+        <div style={{ padding: '1.75rem', overflowY: 'auto' }}>
           {loading && (
             <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
               Loading January 2026 aggregates...
@@ -86,7 +90,7 @@ export default function MonthlySummaryModal({ isOpen, onClose, onSelectDate }) {
           )}
 
           {error && (
-            <div style={{ color: 'var(--accent-error)', padding: '1rem', background: 'rgba(244, 63, 94, 0.1)', borderRadius: '8px' }}>
+            <div style={{ color: 'var(--accent-error)', padding: '1rem', background: '#fff1f2', border: '1px solid #fecdd3', borderRadius: '10px' }}>
               {error}
             </div>
           )}
@@ -100,43 +104,43 @@ export default function MonthlySummaryModal({ isOpen, onClose, onSelectDate }) {
                 gap: '1rem',
                 marginBottom: '1.5rem'
               }}>
-                <div style={{ background: 'var(--bg-card)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Monthly MAE</div>
-                  <div className="mono" style={{ fontSize: '1.4rem', fontWeight: 700, color: '#fff', marginTop: '0.25rem' }}>
+                <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Monthly MAE</div>
+                  <div className="mono" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)', marginTop: '0.25rem' }}>
                     {overall.mae_mw?.toFixed(1)} MW
                   </div>
                 </div>
 
-                <div style={{ background: 'var(--bg-card)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Monthly RMSE</div>
-                  <div className="mono" style={{ fontSize: '1.4rem', fontWeight: 700, color: '#fff', marginTop: '0.25rem' }}>
+                <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Monthly RMSE</div>
+                  <div className="mono" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--text-main)', marginTop: '0.25rem' }}>
                     {overall.rmse_mw?.toFixed(1)} MW
                   </div>
                 </div>
 
-                <div style={{ background: 'var(--bg-card)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Net Bias</div>
+                <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Net Bias</div>
                   <div className="mono" style={{
-                    fontSize: '1.4rem',
+                    fontSize: '1.5rem',
                     fontWeight: 700,
-                    color: overall.bias_mw > 0 ? 'var(--accent-error)' : '#93c5fd',
+                    color: overall.bias_mw > 0 ? 'var(--accent-error)' : 'var(--primary)',
                     marginTop: '0.25rem'
                   }}>
                     {overall.bias_mw > 0 ? `+${overall.bias_mw.toFixed(1)}` : overall.bias_mw?.toFixed(1)} MW
                   </div>
                 </div>
 
-                <div style={{ background: 'var(--bg-card)', padding: '1rem', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Total Generation</div>
-                  <div className="mono" style={{ fontSize: '1.4rem', fontWeight: 700, color: 'var(--accent-actual)', marginTop: '0.25rem' }}>
+                <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', textTransform: 'uppercase', fontWeight: 600 }}>Total Generation</div>
+                  <div className="mono" style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--accent-actual)', marginTop: '0.25rem' }}>
                     {(overall.total_actual_mwh / 1000).toFixed(1)} GWh
                   </div>
                 </div>
               </div>
 
               {/* Daily Table */}
-              <h3 style={{ fontSize: '0.95rem', fontWeight: 600, marginBottom: '0.75rem', color: '#fff' }}>
-                Daily Breakdown (Click to Inspect)
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.75rem', color: 'var(--text-main)' }}>
+                Daily Breakdown (Click to Select)
               </h3>
               <div className="table-container" style={{ maxHeight: '350px' }}>
                 <table>
@@ -166,20 +170,20 @@ export default function MonthlySummaryModal({ isOpen, onClose, onSelectDate }) {
                         </td>
                         <td className="mono">{row.mae_mw?.toFixed(1)}</td>
                         <td className="mono">{row.rmse_mw?.toFixed(1)}</td>
-                        <td className="mono" style={{ color: row.bias_mw > 0 ? 'var(--accent-error)' : '#93c5fd' }}>
+                        <td className="mono" style={{ color: row.bias_mw > 0 ? 'var(--accent-error)' : 'var(--primary)' }}>
                           {row.bias_mw > 0 ? `+${row.bias_mw.toFixed(1)}` : row.bias_mw?.toFixed(1)}
                         </td>
-                        <td className="mono" style={{ color: 'var(--accent-actual)' }}>
+                        <td className="mono" style={{ color: 'var(--accent-actual)', fontWeight: 600 }}>
                           {row.total_actual_mwh?.toLocaleString()}
                         </td>
                         <td>
-                          <span className="badge badge-green" style={{ fontSize: '0.65rem' }}>
+                          <span className="badge badge-green" style={{ fontSize: '0.675rem' }}>
                             {row.quality_score}%
                           </span>
                         </td>
                         <td>
-                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', color: 'var(--primary)', fontSize: '0.75rem', fontWeight: 500 }}>
-                            View <ArrowRight size={12} />
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem', color: 'var(--primary)', fontSize: '0.785rem', fontWeight: 600 }}>
+                            View <ArrowRight size={13} />
                           </span>
                         </td>
                       </tr>

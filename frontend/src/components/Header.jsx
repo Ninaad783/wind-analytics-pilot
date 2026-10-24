@@ -17,57 +17,59 @@ export default function Header({ dataSource, onOpenMonthlySummary }) {
   return (
     <header style={{
       borderBottom: '1px solid var(--border-color)',
-      background: 'rgba(17, 24, 39, 0.85)',
-      backdropFilter: 'blur(10px)',
+      background: 'rgba(255, 255, 255, 0.92)',
+      backdropFilter: 'blur(12px)',
       position: 'sticky',
       top: 0,
-      zIndex: 50
+      zIndex: 50,
+      boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.03)'
     }}>
       <div className="container" style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        paddingTop: '0.875rem',
-        paddingBottom: '0.875rem',
+        paddingTop: '0.9rem',
+        paddingBottom: '0.9rem',
         flexWrap: 'wrap',
         gap: '1rem'
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem' }}>
           <div style={{
-            background: 'linear-gradient(135deg, #2563eb, #10b981)',
+            background: 'linear-gradient(135deg, #2563eb, #059669)',
             padding: '0.625rem',
-            borderRadius: '10px',
+            borderRadius: '11px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.3)'
+            boxShadow: '0 4px 12px rgba(37, 99, 235, 0.25)',
+            transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
           }}>
-            <Wind size={24} color="#ffffff" />
+            <Wind size={22} color="#ffffff" />
           </div>
           <div>
-            <h1 style={{ fontSize: '1.25rem', fontWeight: 700, letterSpacing: '-0.02em', color: '#fff' }}>
-              UK Wind Generation Forecasting
+            <h1 style={{ fontSize: '1.2rem', fontWeight: 700, letterSpacing: '-0.025em', color: 'var(--text-main)' }}>
+              UK Wind Generation Analytics
             </h1>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-              Elexon BMRS <span style={{ color: 'var(--accent-actual)', fontWeight: 600 }}>FUELHH</span> vs <span style={{ color: 'var(--accent-forecast)', fontWeight: 600 }}>WINDFOR</span> Day-Ahead Decision Analytics
+              Elexon BMRS <span style={{ color: 'var(--accent-actual)', fontWeight: 600 }}>FUELHH</span> vs <span style={{ color: 'var(--accent-forecast)', fontWeight: 600 }}>WINDFOR</span> Day-Ahead Purchasing
             </p>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.875rem', flexWrap: 'wrap' }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
-            background: 'var(--bg-card)',
-            padding: '0.4rem 0.75rem',
-            borderRadius: '8px',
+            background: '#f8fafc',
+            padding: '0.45rem 0.85rem',
+            borderRadius: '9px',
             border: '1px solid var(--border-color)',
             fontSize: '0.8rem',
             color: 'var(--text-muted)'
           }}>
             <Clock size={14} color="var(--primary)" />
-            <span className="mono">{utcTime || 'Clock synchronizing...'}</span>
+            <span className="mono" style={{ fontWeight: 500 }}>{utcTime || 'Clock synchronizing...'}</span>
           </div>
 
           <div className={`badge ${dataSource?.includes('LIVE') ? 'badge-green' : 'badge-blue'}`}>
@@ -78,9 +80,9 @@ export default function Header({ dataSource, onOpenMonthlySummary }) {
           <button
             onClick={onOpenMonthlySummary}
             className="btn btn-secondary"
-            style={{ fontSize: '0.8rem', padding: '0.4rem 0.85rem' }}
+            style={{ fontSize: '0.8rem', padding: '0.45rem 0.95rem' }}
           >
-            <BarChart3 size={15} />
+            <BarChart3 size={15} color="var(--primary)" />
             <span>Jan 2026 Overview</span>
           </button>
         </div>

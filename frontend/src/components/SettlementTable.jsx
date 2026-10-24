@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Download, Filter, Search, CheckCircle, AlertTriangle, FileSpreadsheet } from 'lucide-react';
+import { Download, Search, CheckCircle, AlertTriangle } from 'lucide-react';
 
 export default function SettlementTable({ periods, targetDate }) {
   const [filter, setFilter] = useState('ALL');
@@ -63,7 +63,7 @@ export default function SettlementTable({ periods, targetDate }) {
         gap: '0.75rem'
       }}>
         <div>
-          <h2 style={{ fontSize: '1.05rem', fontWeight: 600, color: '#fff' }}>
+          <h2 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', letterSpacing: '-0.02em' }}>
             Settlement Period Granular Audit Table
           </h2>
           <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
@@ -80,9 +80,9 @@ export default function SettlementTable({ periods, targetDate }) {
               value={searchSp}
               onChange={(e) => setSearchSp(e.target.value)}
               className="text-input"
-              style={{ width: '130px', paddingLeft: '1.75rem', fontSize: '0.775rem' }}
+              style={{ width: '135px', paddingLeft: '1.85rem', fontSize: '0.8rem' }}
             />
-            <Search size={13} style={{ position: 'absolute', left: '0.55rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-subtle)' }} />
+            <Search size={14} style={{ position: 'absolute', left: '0.6rem', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-subtle)' }} />
           </div>
 
           {/* Quick Filter */}
@@ -90,7 +90,7 @@ export default function SettlementTable({ periods, targetDate }) {
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
             className="select-input"
-            style={{ fontSize: '0.775rem' }}
+            style={{ fontSize: '0.8rem', fontWeight: 500 }}
           >
             <option value="ALL">All Periods (48)</option>
             <option value="VALID">Valid Complete Pairs</option>
@@ -99,8 +99,8 @@ export default function SettlementTable({ periods, targetDate }) {
           </select>
 
           {/* CSV Export */}
-          <button onClick={exportCsv} className="btn btn-secondary" style={{ fontSize: '0.775rem' }}>
-            <Download size={14} />
+          <button onClick={exportCsv} className="btn btn-secondary" style={{ fontSize: '0.8rem', padding: '0.5rem 0.85rem' }}>
+            <Download size={14} color="var(--primary)" />
             <span>Export CSV</span>
           </button>
         </div>
@@ -117,7 +117,7 @@ export default function SettlementTable({ periods, targetDate }) {
               <th>Forecast (WINDFOR)</th>
               <th>Error (MW)</th>
               <th>Abs Error (MW)</th>
-              <th>Status Flags</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
@@ -136,7 +136,7 @@ export default function SettlementTable({ periods, targetDate }) {
                   <td className="mono" style={{ color: 'var(--text-muted)' }}>
                     {startStr} – {endStr}
                   </td>
-                  <td className="mono" style={{ fontSize: '0.75rem', color: 'var(--text-subtle)' }}>
+                  <td className="mono" style={{ fontSize: '0.785rem', color: 'var(--text-subtle)' }}>
                     {pubStr}
                   </td>
                   <td className="mono" style={{ fontWeight: 600, color: p.actual_mw !== null ? 'var(--accent-actual)' : 'var(--accent-error)' }}>
@@ -147,7 +147,7 @@ export default function SettlementTable({ periods, targetDate }) {
                   </td>
                   <td className="mono" style={{
                     fontWeight: 600,
-                    color: p.error_mw !== null ? (p.error_mw > 0 ? 'var(--accent-error)' : '#93c5fd') : 'var(--text-subtle)'
+                    color: p.error_mw !== null ? (p.error_mw > 0 ? 'var(--accent-error)' : 'var(--primary)') : 'var(--text-subtle)'
                   }}>
                     {p.error_mw !== null ? `${p.error_mw > 0 ? '+' : ''}${p.error_mw.toFixed(1)}` : '—'}
                   </td>
@@ -156,11 +156,11 @@ export default function SettlementTable({ periods, targetDate }) {
                   </td>
                   <td>
                     {p.is_valid_pair ? (
-                      <span className="badge badge-green" style={{ fontSize: '0.65rem' }}>
+                      <span className="badge badge-green" style={{ fontSize: '0.675rem' }}>
                         <CheckCircle size={10} /> Valid
                       </span>
                     ) : (
-                      <span className="badge badge-amber" style={{ fontSize: '0.65rem' }}>
+                      <span className="badge badge-amber" style={{ fontSize: '0.675rem' }}>
                         <AlertTriangle size={10} /> {p.data_quality_flags[0] || 'Incomplete'}
                       </span>
                     )}

@@ -22,7 +22,7 @@ export default function DateSelector({
   };
 
   const presets = [
-    { label: 'Jan 15 (Mid-Month Benchmark)', date: '2026-01-15' },
+    { label: 'Jan 15 (Benchmark Mid-Month)', date: '2026-01-15' },
     { label: 'Jan 08 (Missing Telemetry Test)', date: '2026-01-08' },
     { label: 'Jan 19 (Storm Ramp)', date: '2026-01-19' },
     { label: 'Jan 26 (Calm Lull)', date: '2026-01-26' },
@@ -41,15 +41,15 @@ export default function DateSelector({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
             <Calendar size={18} color="var(--primary)" />
-            <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Delivery Date:</span>
+            <span style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-main)' }}>Delivery Date:</span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
             <button
               onClick={handlePrev}
               disabled={!hasPrev || isLoading}
               className="btn btn-secondary"
-              style={{ padding: '0.45rem', minWidth: '32px', opacity: hasPrev ? 1 : 0.4 }}
+              style={{ padding: '0.5rem', minWidth: '34px', opacity: hasPrev ? 1 : 0.4 }}
               title="Previous Day"
             >
               <ChevronLeft size={16} />
@@ -74,7 +74,7 @@ export default function DateSelector({
               onClick={handleNext}
               disabled={!hasNext || isLoading}
               className="btn btn-secondary"
-              style={{ padding: '0.45rem', minWidth: '32px', opacity: hasNext ? 1 : 0.4 }}
+              style={{ padding: '0.5rem', minWidth: '34px', opacity: hasNext ? 1 : 0.4 }}
               title="Next Day"
             >
               <ChevronRight size={16} />
@@ -86,7 +86,7 @@ export default function DateSelector({
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--text-muted)' }}>
             <SlidersHorizontal size={16} color="var(--accent-warning)" />
-            <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>Decision Cutoff (D-1):</span>
+            <span style={{ fontWeight: 600, fontSize: '0.875rem', color: 'var(--text-main)' }}>Decision Cutoff (D-1):</span>
           </div>
 
           <select
@@ -95,7 +95,7 @@ export default function DateSelector({
             onChange={(e) => onCutoffChange(parseInt(e.target.value, 10))}
             disabled={isLoading}
             className="select-input"
-            style={{ minWidth: '220px' }}
+            style={{ minWidth: '240px', fontWeight: 500 }}
           >
             <option value={17}>17:00 UTC (Day-Ahead Wholesale Close)</option>
             <option value={12}>12:00 UTC (Day-Ahead Exchange Auction)</option>
@@ -107,8 +107,8 @@ export default function DateSelector({
 
       {/* Preset Pills */}
       <div style={{
-        marginTop: '0.875rem',
-        paddingTop: '0.75rem',
+        marginTop: '0.9rem',
+        paddingTop: '0.85rem',
         borderTop: '1px solid var(--border-subtle)',
         display: 'flex',
         alignItems: 'center',
@@ -119,25 +119,30 @@ export default function DateSelector({
           <Sparkles size={13} color="var(--primary)" />
           <span>Quick Scenarios:</span>
         </div>
-        {presets.map((p) => (
-          <button
-            key={p.date}
-            onClick={() => onDateChange(p.date)}
-            disabled={isLoading}
-            style={{
-              background: selectedDate === p.date ? 'var(--primary-subtle)' : 'transparent',
-              color: selectedDate === p.date ? 'var(--primary)' : 'var(--text-muted)',
-              border: `1px solid ${selectedDate === p.date ? 'var(--primary)' : 'var(--border-subtle)'}`,
-              borderRadius: '6px',
-              padding: '0.2rem 0.5rem',
-              fontSize: '0.75rem',
-              cursor: 'pointer',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            {p.label}
-          </button>
-        ))}
+        {presets.map((p) => {
+          const isSelected = selectedDate === p.date;
+          return (
+            <button
+              key={p.date}
+              onClick={() => onDateChange(p.date)}
+              disabled={isLoading}
+              style={{
+                background: isSelected ? '#eff6ff' : '#ffffff',
+                color: isSelected ? 'var(--primary)' : 'var(--text-muted)',
+                border: `1px solid ${isSelected ? '#93c5fd' : 'var(--border-color)'}`,
+                borderRadius: '7px',
+                padding: '0.25rem 0.6rem',
+                fontSize: '0.75rem',
+                fontWeight: isSelected ? 600 : 500,
+                cursor: 'pointer',
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                boxShadow: isSelected ? '0 1px 3px rgba(37, 99, 235, 0.12)' : 'none'
+              }}
+            >
+              {p.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
