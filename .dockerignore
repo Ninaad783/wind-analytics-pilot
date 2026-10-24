@@ -1,0 +1,14 @@
+.git
+.github
+node_modules
+frontend/node_modules
+frontend/dist
+__pycache__
+*.pyc
+.pytest_cache
+.coverage
+htmlcov
+.env
+.env.local
+locust_*.csv
+locust_*.html
