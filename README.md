@@ -4,29 +4,89 @@ A production-grade, full-stack analytics application designed for UK electricity
 
 ---
 
-## Architecture Overview
+## Live Deployment Links
+- **Frontend Web Application (Vercel):** `https://<your-anonymous-app-id>.vercel.app` *(Replace with your live URL upon deployment)*
+- **Backend API Service (Render / Heroku):** `https://<your-backend-api-id>.onrender.com`
+- **Interactive OpenAPI Documentation:** `https://<your-backend-api-id>.onrender.com/docs`
+- **Local Development Dashboard:** [http://localhost:3000](http://localhost:3000)
+- **Local Backend API:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
+
+---
+
+## Directory & File Structure
 
 ```
-+-------------------------------------------------------------+
-|                 React Client (Port 3000 / 5173)             |
-|  - Date Selector (Jan 2026 focus)  - Metric Cards (MAE/RMSE)|
-|  - Delivery vs Publish Timeline   - Half-hourly Recharts    |
-|  - Granular Settlement Data Table  - Data Quality Indicators |
-+------------------------------+------------------------------+
-                               | REST / JSON
-                               v
-+-------------------------------------------------------------+
-|                FastAPI Backend (Port 8000)                  |
-|  - Security Middleware (OWASP headers, sanitized errors)    |
-|  - Sliding-Window Rate Limiter (Token Bucket)               |
-|  - Forecast Service: Cutoff Filter & Latest Eligible Picker |
-|  - Metrics Service: MAE, RMSE, Bias & Data Quality Validator|
-|  - Hybrid Data Store: Live Elexon BMRS API + Jan 2026 Cache |
-+-------------------------------------------------------------+
+d:\assign-2\
+  ├── AGENTS.md                          # Mandatory operational, engineering & domain governance rules
+  ├── README.md                          # Architecture, installation, file breakdown & deployment guide
+  ├── docker-compose.yml                 # Multi-container orchestration (frontend + backend)
+  ├── .gitignore                         # Strict exclusion of secrets, environments, and test artifacts
+  ├── .dockerignore                      # Build context exclusion for lean Docker image layers
+  ├── .env.example                       # Documented environment variable template
+  ├── docs/
+  │    └── QUALITY_CHECKLIST.md          # Acceptance checklist for functional, test, security & performance
+  ├── backend/
+  │    ├── Dockerfile                    # Multi-stage Python 3.12-slim production container
+  │    ├── requirements.txt              # Pinned backend dependencies
+  │    ├── locustfile.py                 # Concurrency & load benchmark scenarios (10, 50, 100 users)
+  │    ├── app/
+  │    │    ├── __init__.py              # Python package marker
+  │    │    ├── main.py                  # FastAPI application, CORS, OWASP middleware & error handlers
+  │    │    ├── config.py                # Pydantic Settings for environment-driven configuration
+  │    │    ├── models.py                # Domain schemas (SettlementPeriod, AccuracyMetrics, Responses)
+  │    │    ├── services/
+  │    │    │    ├── __init__.py
+  │    │    │    ├── forecast_service.py # Cutoff filtering (D-1 17:00), latest eligible picker & alignment
+  │    │    │    ├── metrics_service.py  # MAE, RMSE, Bias & observation completeness calculations
+  │    │    │    ├── elexon_client.py    # Elexon BMRS API client with timeout, retry & caching
+  │    │    │    └── data_store.py       # Curated 1,488 half-hour benchmark dataset for January 2026
+  │    │    ├── routers/
+  │    │    │    ├── __init__.py
+  │    │    │    ├── forecasts.py        # /api/analysis, /api/dates, /api/summary/monthly endpoints
+  │    │    │    └── health.py           # /health and /health/ready container probes
+  │    │    └── middleware/
+  │    │         ├── __init__.py
+  │    │         ├── security.py         # OWASP security headers (CSP, nosniff, DENY, etc.)
+  │    │         └── rate_limit.py       # Sliding-window token bucket DoS protection
+  │    └── tests/
+  │         ├── __init__.py
+  │         ├── test_metrics.py         # Hand-calculated MAE, RMSE, Bias unit tests
+  │         ├── test_forecast_logic.py  # Look-ahead bias prevention & latest eligible selection tests
+  │         ├── test_api_routes.py      # REST endpoint integration tests via TestClient
+  │         ├── test_security.py        # OWASP security tests (SQLi, XSS, SSRF, rate limiting)
+  │         └── test_edge_cases.py      # Telemetry dropout (Jan 8 SP 24) & clock-change tests
+  └── frontend/
+       ├── Dockerfile                    # Multi-stage Vite build + unprivileged Nginx alpine server
+       ├── package.json                  # React 18, Vite, Lucide & Vitest dependencies
+       ├── vite.config.js                # Vite build config, dev proxy, and test setup
+       ├── index.html                    # Single Page App HTML template
+       └── src/
+            ├── main.jsx                 # React DOM mount point
+            ├── index.css                # Grey & White minimalist design system & micro-interactions
+            ├── App.jsx                  # Main dashboard layout, state management & data orchestration
+            ├── services/
+            │    └── api.js              # REST client consuming backend endpoints
+            ├── components/
+            │    ├── Header.jsx          # Frosted glass header, UTC market clock & benchmark badges
+            │    ├── DateSelector.jsx    # January 2026 picker, cutoff selector & preset scenario pills
+            │    ├── CutoffExplainer.jsx # Visual explainer for D-1 17:00 UTC cutoff & zero look-ahead bias
+            │    ├── MetricCards.jsx     # MAE, RMSE, Bias (over/under forecast) & Data Quality KPI cards
+            │    ├── ForecastChart.jsx   # Interactive SVG chart with hover crosshairs & shaded error band
+            │    ├── SettlementTable.jsx # 48 half-hour audit table with status filtering & CSV download
+            │    ├── DataQualityAlerts.jsx# Telemetry dropout & missing observation warning banners
+            │    └── MonthlySummaryModal.jsx # Aggregated 31-day January 2026 performance modal
+            └── tests/
+                 ├── setup.js            # Jest-DOM matchers setup for Vitest
+                 ├── MetricCards.test.jsx# Vitest test suite for KPI cards and bias tags
+                 ├── DateSelector.test.jsx# Vitest test suite for date and cutoff controls
+                 └── ForecastChart.test.jsx# Vitest test suite for chart rendering and legends
 ```
 
-### Key Design Decisions & Domain Rules
-1. **Zero Look-Ahead Bias:** Wholesale day-ahead electricity purchasing decisions for delivery day $D$ close on day $D-1$ at 17:00 UTC (or 12:00 UTC for day-ahead power auctions). Any forecast published after this decision cutoff is strictly discarded during day-ahead backtest evaluation.
+---
+
+## Domain & Engineering Principles
+
+1. **Zero Look-Ahead Bias:** Day-ahead electricity purchasing decisions for delivery day $D$ close on day $D-1$ at 17:00 UTC (or 12:00 UTC for day-ahead power auctions). Any forecast published after this decision cutoff is strictly discarded during day-ahead backtest evaluation.
 2. **Latest Eligible Forecast Selection:** For every delivery settlement period, the system selects the latest forecast published on or before the cutoff time.
 3. **Data Integrity & Missing Data:** Missing settlement periods are **never** coerced to zero (zero MW means zero generation; missing means missing telemetry). Error metrics compute strictly over valid matched observation pairs, accompanied by completeness telemetry ($N_{valid} / N_{total}$).
 4. **Error Metrics Convention:**
@@ -39,10 +99,6 @@ A production-grade, full-stack analytics application designed for UK electricity
 ---
 
 ## Quick Start (Local Development)
-
-### Prerequisites
-- Python 3.12+
-- Node.js 18+ and npm 9+
 
 ### 1. Backend Setup
 ```powershell
@@ -59,7 +115,7 @@ Backend API will be available at: `http://127.0.0.1:8000` (Interactive API docs 
 
 ### 2. Frontend Setup
 ```powershell
-# Open a new terminal in the frontend directory
+# In a new terminal:
 cd d:\assign-2\frontend
 
 # Install dependencies
@@ -68,7 +124,7 @@ npm install
 # Start Vite dev server
 npm run dev
 ```
-Frontend application will be accessible at: `http://localhost:3000` (or `http://localhost:5173`).
+Frontend application will be accessible at: `http://localhost:3000`.
 
 ---
 
@@ -126,24 +182,27 @@ curl http://localhost:8000/health
 ## Cloud Deployment Guide
 
 ### Frontend Deployment (Vercel)
-1. Push the code to a GitHub repository.
-2. In Vercel, click **New Project** and import the repository.
-3. Set the **Root Directory** to `frontend`.
-4. Framework Preset: **Vite**.
-5. Build Command: `npm run build`.
-6. Output Directory: `dist`.
-7. Configure `VITE_API_URL` environment variable pointing to the deployed backend URL.
+1. Push code to your anonymous GitHub repository (e.g., `kjhwr`).
+2. Log in to [Vercel](https://vercel.com) and click **Add New Project**.
+3. Import your GitHub repository.
+4. Set **Root Directory** to `frontend`.
+5. Framework Preset: **Vite**.
+6. Build Command: `npm run build`.
+7. Output Directory: `dist`.
+8. Under **Environment Variables**, set `VITE_API_BASE_URL` to your backend URL (e.g. `https://your-backend.onrender.com`).
+9. Click **Deploy**.
 
-### Backend Deployment (Heroku / Render / AWS ECS)
-1. Set the build environment to Python or use the provided `backend/Dockerfile`.
-2. Configure environment variables from `.env.example`:
+### Backend Deployment (Render or Heroku)
+1. In [Render](https://render.com) or [Heroku](https://heroku.com), create a new **Web Service**.
+2. Connect your GitHub repository.
+3. Select **Docker** environment (uses `backend/Dockerfile`) or **Python**:
+   - Build command: `pip install -r backend/requirements.txt`
+   - Start command: `python -m uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT`
+4. Set environment variables:
    - `ENVIRONMENT=production`
-   - `ELEXON_API_KEY=<your_api_key>`
-   - `CORS_ORIGINS=["https://your-frontend-domain.vercel.app"]`
-3. Procfile command (if deploying to Heroku dyno):
-   ```
-   web: python -m uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
-   ```
+   - `ELEXON_API_KEY=<optional_key>`
+   - `CORS_ORIGINS=["https://your-app.vercel.app","http://localhost:3000"]`
+5. Click **Create Web Service**.
 
 ---
 
@@ -160,4 +219,4 @@ curl http://localhost:8000/health
 ---
 
 ## AI Disclosure
-In accordance with engineering integrity guidelines, Google DeepMind Antigravity AI assistant was utilized during the development of this codebase to accelerate test authoring, architectural scaffolding, and documentation.
+In accordance with engineering integrity guidelines, Google DeepMind Antigravity AI assistant was utilized during the development of this codebase to accelerate test authoring, architectural scaffolding, UI refinement, and documentation.
