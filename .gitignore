@@ -50,3 +50,6 @@ yarn-error.log*
 *.swo
 .DS_Store
 Thumbs.db
+
+# Other challenge directories
+hackerrank-orchestrate-october26/
