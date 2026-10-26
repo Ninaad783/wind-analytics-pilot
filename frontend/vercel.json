@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://wind-analytics-pilot.onrender.com/api/:path*"
+    },
+    {
+      "source": "/health",
+      "destination": "https://wind-analytics-pilot.onrender.com/health"
+    }
+  ]
+}

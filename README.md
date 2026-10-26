@@ -5,9 +5,10 @@ A production-grade, full-stack analytics application designed for UK electricity
 ---
 
 ## Live Deployment Links
-- **Frontend Web Application (Vercel):** `https://<your-anonymous-app-id>.vercel.app` *(Replace with your live URL upon deployment)*
-- **Backend API Service (Render / Heroku):** `https://<your-backend-api-id>.onrender.com`
-- **Interactive OpenAPI Documentation:** `https://<your-backend-api-id>.onrender.com/docs`
+- **Frontend Web Application (Vercel):** [https://wind-analytics-pilot.vercel.app](https://wind-analytics-pilot.vercel.app)
+- **Backend API Service (Render):** [https://wind-analytics-pilot.onrender.com](https://wind-analytics-pilot.onrender.com)
+- **Interactive OpenAPI Documentation:** [https://wind-analytics-pilot.onrender.com/docs](https://wind-analytics-pilot.onrender.com/docs)
+- **Backend Health Check:** [https://wind-analytics-pilot.onrender.com/health](https://wind-analytics-pilot.onrender.com/health)
 - **Local Development Dashboard:** [http://localhost:3000](http://localhost:3000)
 - **Local Backend API:** [http://127.0.0.1:8000](http://127.0.0.1:8000)
 

@@ -1,4 +1,8 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+const isLocalhost = typeof window !== 'undefined' &&
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL ||
+  (isLocalhost ? '' : 'https://wind-analytics-pilot.onrender.com');
 
 export async function fetchAvailableDates() {
   const res = await fetch(`${API_BASE}/api/dates`);
