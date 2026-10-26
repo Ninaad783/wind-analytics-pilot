@@ -1,4 +1,4 @@
-const API_BASE = '';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
 
 export async function fetchAvailableDates() {
   const res = await fetch(`${API_BASE}/api/dates`);
